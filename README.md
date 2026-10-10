@@ -181,7 +181,7 @@ Separating the analysis engine from the API allows the matching logic to be test
 Development will proceed incrementally, prioritizing a reliable end-to-end workflow before advanced features.
 
 - [x] **Phase 1 — Foundation:** Establish repository structure, development environment, documentation, and coding conventions.
-- [ ] **Phase 2 — Data models:** Define internship requirements, normalized skills, and student skill profiles.
+- [x] **Phase 2 — Data models:** Define internship requirements, normalized skills, and student skill profiles.
 - [ ] **Phase 3 — Analysis engine:** Implement skill extraction, normalization, matching, and gap identification.
 - [ ] **Phase 4 — Backend API:** Expose analysis functionality through validated FastAPI endpoints.
 - [ ] **Phase 5 — Frontend:** Build the interface for entering internship descriptions and reviewing analysis results.
