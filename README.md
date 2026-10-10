@@ -1,4 +1,3 @@
-ReadME
 # Internship Skill Gap Analyzer
 
 **Turn internship requirements into an actionable plan for becoming a stronger candidate.**
@@ -23,8 +22,11 @@ Rather than leaving students to interpret lengthy job descriptions on their own,
 - [Testing and Quality](#testing-and-quality)
 - [Privacy and Responsible Use](#privacy-and-responsible-use)
 - [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Development Conventions](#development-conventions)
 - [Future Improvements](#future-improvements)
 - [Project Goals](#project-goals)
+- [Vision](#vision)
 
 ## The Problem
 
@@ -178,7 +180,7 @@ Separating the analysis engine from the API allows the matching logic to be test
 
 Development will proceed incrementally, prioritizing a reliable end-to-end workflow before advanced features.
 
-- [ ] **Phase 1 — Foundation:** Establish repository structure, development environment, documentation, and coding conventions.
+- [x] **Phase 1 — Foundation:** Establish repository structure, development environment, documentation, and coding conventions.
 - [ ] **Phase 2 — Data models:** Define internship requirements, normalized skills, and student skill profiles.
 - [ ] **Phase 3 — Analysis engine:** Implement skill extraction, normalization, matching, and gap identification.
 - [ ] **Phase 4 — Backend API:** Expose analysis functionality through validated FastAPI endpoints.
@@ -221,29 +223,96 @@ The application is intended to support career preparation, not make employment d
 
 ## Getting Started
 
-Setup instructions will be finalized as the implementation stabilizes.
-
 ### Prerequisites
 
-The planned development environment includes:
-
-- Python
-- Node.js and npm
+- Python 3.12 or newer
+- Node.js 20 or newer, with npm
 - Git
-- PostgreSQL, if database-backed features are enabled
+- PostgreSQL, only once database-backed features are added
 
 ### Installation
 
-Once the initial backend and frontend are implemented, setup will follow this general workflow:
+Clone the repository:
 
-1. Clone the repository.
-2. Create and activate a Python virtual environment.
-3. Install backend dependencies.
-4. Install frontend dependencies.
-5. Configure environment variables using the provided example configuration.
-6. Start the backend and frontend development servers.
+```bash
+git clone https://github.com/AnthonySapranenko/Internship-Gap-Analysis.git
+cd Internship-Gap-Analysis
+```
 
-Exact commands, environment variables, and configuration requirements will be documented here as they become available.
+Set up the backend:
+
+```bash
+cd backend
+python -m venv .venv
+.venv\Scripts\activate          # Windows
+# source .venv/bin/activate     # macOS / Linux
+pip install -e ".[dev]"
+cp .env.example .env            # optional; defaults work for local development
+```
+
+Set up the frontend:
+
+```bash
+cd frontend
+npm install
+```
+
+### Running locally
+
+Start the backend and frontend in two separate terminals.
+
+```bash
+# Terminal 1, from backend/ with the virtual environment active
+uvicorn gap_analyzer.api.main:app --reload
+```
+
+```bash
+# Terminal 2, from frontend/
+npm run dev
+```
+
+Open http://localhost:5173. The page shows whether it can reach the backend. The frontend dev server forwards `/api` requests to the backend on port 8000. Interactive API docs are at http://localhost:8000/docs.
+
+### Running checks
+
+```bash
+# backend/
+pytest              # tests
+ruff check .        # lint
+ruff format .       # format
+
+# frontend/
+npm run lint
+npm run build       # type-check and production build
+```
+
+The same checks run automatically on GitHub for every push and pull request (see `.github/workflows/ci.yml`).
+
+## Project Structure
+
+```text
+backend/
+  pyproject.toml            Dependencies and tool configuration
+  .env.example              Example environment variables
+  src/gap_analyzer/
+    config.py               Settings loaded from environment variables
+    api/                    FastAPI app and routes
+    engine/                 Analysis engine, independent of the web layer
+  tests/                    Pytest test suite
+frontend/
+  src/                      React + TypeScript application
+  vite.config.ts            Dev server and API proxy configuration
+.github/workflows/ci.yml    Automated lint, test and build checks
+```
+
+## Development Conventions
+
+- **Branches and commits:** keep `main` working. Make small, focused commits with messages that say what changed and why.
+- **Separation of concerns:** the analysis engine must not import FastAPI. The API layer validates input and calls the engine.
+- **Python:** formatted and linted with Ruff, with type hints on public functions. Every engine change comes with tests.
+- **TypeScript:** strict mode, linted with oxlint. Call the backend only through relative `/api` URLs.
+- **Configuration:** settings come from environment variables prefixed with `GAP_`. Real `.env` files are never committed.
+- **Formatting:** line endings and indentation are set by `.editorconfig` and `.gitattributes`.
 
 ## Future Improvements
 
