@@ -51,7 +51,7 @@ def test_analyze_posting_without_known_skills_returns_no_matches():
     response = analyze({"internship": {"text": "We value teamwork."}, "profile": {}})
 
     assert response.status_code == 200
-    assert response.json() == {"matches": []}
+    assert response.json() == {"matches": [], "mentions": []}
 
 
 def test_analyze_rejects_empty_description():
@@ -101,3 +101,13 @@ def test_list_skills_includes_categories_and_aliases():
     skills = {s["name"]: s for s in response.json()}
     assert skills["JavaScript"]["category"] == "language"
     assert "JS" in skills["JavaScript"]["aliases"]
+
+
+def test_analyze_returns_mentions_indexing_the_unstripped_text():
+    text = "\n\n  Requirements:\n- Python\n"
+
+    response = analyze({"internship": {"text": text}, "profile": {}})
+
+    (mention,) = response.json()["mentions"]
+    assert mention["skill"] == "Python"
+    assert text[mention["start"] : mention["end"]] == "Python"

@@ -20,3 +20,9 @@ dist/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Impeccable (design plugin): keep briefs and decision sketches, ignore local session files
+.impeccable/questions/
+.impeccable/review/
+.impeccable/hook.cache.json
+.impeccable/config.local.json

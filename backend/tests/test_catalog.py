@@ -5,7 +5,7 @@ from gap_analyzer.models import Skill, SkillCategory
 
 
 def names_in(text: str) -> list[str]:
-    return [skill.name for _, skill in DEFAULT_CATALOG.find_in_text(text)]
+    return [skill.name for _, _, skill in DEFAULT_CATALOG.find_in_text(text)]
 
 
 @pytest.mark.parametrize(

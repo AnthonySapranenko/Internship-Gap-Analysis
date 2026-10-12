@@ -53,8 +53,26 @@ class Requirement(_Model):
 
 
 class InternshipDescription(_Model):
+    # Not stripped: mention offsets in the analysis index into the text exactly as sent.
+    model_config = ConfigDict(str_strip_whitespace=False)
+
     title: str | None = None
     text: str = Field(min_length=1, max_length=50_000)
+
+    @field_validator("text")
+    @classmethod
+    def _not_blank(cls, text: str) -> str:
+        if not text.strip():
+            raise ValueError("the description is empty")
+        return text
+
+
+class Mention(_Model):
+    """Where a skill appears in the description: text[start:end] (code point offsets)."""
+
+    skill: str
+    start: int = Field(ge=0)
+    end: int = Field(gt=0)
 
 
 # --- Student profile ----------------------------------------------------------------------
@@ -110,6 +128,7 @@ class RequirementMatch(_Model):
 
 class AnalysisResult(_Model):
     matches: tuple[RequirementMatch, ...] = ()
+    mentions: tuple[Mention, ...] = ()
 
     def with_status(self, status: MatchStatus) -> tuple[RequirementMatch, ...]:
         return tuple(match for match in self.matches if match.status == status)

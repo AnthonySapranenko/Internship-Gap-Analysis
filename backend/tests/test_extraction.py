@@ -1,4 +1,4 @@
-from gap_analyzer.engine import DEFAULT_CATALOG, extract_requirements
+from gap_analyzer.engine import DEFAULT_CATALOG, extract, extract_requirements
 from gap_analyzer.models import RequirementLevel
 
 REQUIRED = RequirementLevel.REQUIRED
@@ -124,3 +124,29 @@ def test_long_evidence_is_truncated():
 
 def test_text_without_known_skills_yields_nothing():
     assert extract_requirements("We value curiosity and teamwork.", DEFAULT_CATALOG) == []
+
+
+def mentioned(text: str) -> list[tuple[str, str]]:
+    _, mentions = extract(text, DEFAULT_CATALOG)
+    return [(m.skill, text[m.start : m.end]) for m in mentions]
+
+
+def test_mentions_point_at_the_original_text():
+    text = "Requirements:\n- Python and Git\nNice to have: Postgres. Docker is a plus."
+
+    assert mentioned(text) == [
+        ("Python", "Python"),
+        ("Git", "Git"),
+        ("PostgreSQL", "Postgres"),
+        ("Docker", "Docker"),
+    ]
+
+
+def test_mentions_include_repeats():
+    assert mentioned("Python. More Python.") == [("Python", "Python"), ("Python", "Python")]
+
+
+def test_mention_offsets_survive_windows_line_endings_and_emoji():
+    text = "🚀 About us\r\n\r\n• Experience with React Native 🎉 and SQL\r\n"
+
+    assert mentioned(text) == [("React Native", "React Native"), ("SQL", "SQL")]

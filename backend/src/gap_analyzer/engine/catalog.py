@@ -125,8 +125,8 @@ class SkillCatalog:
         """Find the skill a name or alias refers to, ignoring case and surrounding spaces."""
         return self._by_alias.get(" ".join(name.split()).casefold())
 
-    def find_in_text(self, text: str) -> list[tuple[int, Skill]]:
-        """Return (position, skill) for each skill mentioned in `text`, in reading order.
+    def find_in_text(self, text: str) -> list[tuple[int, int, Skill]]:
+        """Return (start, end, skill) for each skill mentioned in `text`, in reading order.
 
         When mentions overlap, the longest wins, so "React Native" is not also read as
         "React", and "Node.js" is not also read as "JS". Ambiguous aliases only count when
@@ -140,18 +140,18 @@ class SkillCatalog:
         candidates.sort(key=lambda c: (-(c[1] - c[0]), c[0]))
 
         taken: list[tuple[int, int]] = []
-        found: list[tuple[int, Skill, bool]] = []
+        found: list[tuple[int, int, Skill, bool]] = []
         for start, end, skill, ambiguous in candidates:
             if any(start < t_end and t_start < end for t_start, t_end in taken):
                 continue
             taken.append((start, end))
-            found.append((start, skill, ambiguous))
+            found.append((start, end, skill, ambiguous))
 
-        has_clear_mention = any(not ambiguous for _, _, ambiguous in found)
+        has_clear_mention = any(not ambiguous for *_, ambiguous in found)
         return sorted(
             (
-                (start, skill)
-                for start, skill, ambiguous in found
+                (start, end, skill)
+                for start, end, skill, ambiguous in found
                 if has_clear_mention or not ambiguous
             ),
             key=lambda f: f[0],

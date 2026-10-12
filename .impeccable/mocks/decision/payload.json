@@ -1,0 +1,40 @@
+{
+  "title": "Choose the layout",
+  "question": "Three ways to arrange the analyzer in the index-card style. Pick the one you want built, or re-roll for others.",
+  "options": [
+    {
+      "id": "profile-rail",
+      "label": "Profile rail",
+      "kicker": "THE ROLL",
+      "thesis": "Your skills live in a permanent left rail, like a card box you keep across postings.",
+      "palette": ["#1d4e89", "#e8eef6", "#fffefa", "#d9434c", "#fbe3e8", "#fff2bf", "#e2f2df"],
+      "materials": ["index card stock", "divider tabs"],
+      "viewport": "Left rail: skill cards with how many requirements each covers. Main: collapsed posting strip, then divider-tabbed rows of cards for gaps, not listed, and matched.",
+      "risk": "The posting is tucked into a strip, so editing it is one click away instead of always visible.",
+      "html": ".impeccable/mocks/decision/rail.html"
+    },
+    {
+      "id": "marked-posting",
+      "label": "Marked-up posting",
+      "thesis": "The posting itself becomes the result: every skill it mentions is highlighted in its status colour, like a printout gone over with highlighters.",
+      "palette": ["#1d4e89", "#fffefa", "#cdeac7", "#f8c9d4", "#ffe48a", "#d9434c"],
+      "materials": ["ruled sheet", "highlighter marks"],
+      "viewport": "Skills as a chip bar under the header. Left: the posting on a ruled sheet with highlighted mentions. Right: the result cards, the selected mention's card enlarged.",
+      "risk": "Strongest for evidence, but long postings push results off-screen on phones; needs a careful mobile layout.",
+      "html": ".impeccable/mocks/decision/marked.html"
+    },
+    {
+      "id": "three-steps",
+      "label": "Three steps",
+      "thesis": "Posting, then skills, then results, one screen at a time, with results laid out as three side-by-side card stacks.",
+      "palette": ["#1d4e89", "#e8eef6", "#fffefa", "#d9434c", "#fbe3e8", "#fff2bf", "#e2f2df"],
+      "materials": ["index card stock", "divider tabs"],
+      "viewport": "Step bar under the header (Posting, Your skills, Results). Results step: posting title and summary, then three columns: gaps, not in profile, matched.",
+      "risk": "Clearest for first use, but slower when iterating: changing a skill means stepping back.",
+      "html": ".impeccable/mocks/decision/steps.html"
+    }
+  ],
+  "reroll": true,
+  "steer": true,
+  "buildPath": { "value": "code" }
+}

@@ -6,9 +6,10 @@ level for the lines under them, and a cue in the same sentence ("... is a plus",
 """
 
 import re
+from collections.abc import Iterator
 
 from gap_analyzer.engine.catalog import SkillCatalog
-from gap_analyzer.models import Requirement, RequirementLevel
+from gap_analyzer.models import Mention, Requirement, RequirementLevel
 
 
 def _words(*phrases: str) -> re.Pattern[str]:
@@ -62,6 +63,8 @@ SENTENCE_END = re.compile(r"(?<=[.!?;])\s+")
 
 MAX_HEADING_WORDS = 6  # "Preferred Qualifications", "What you'll need to succeed"
 MAX_EVIDENCE_CHARS = 240
+# Every character str.splitlines() treats as a line boundary.
+LINE_BREAKS = "\r\n\x0b\x0c\x1c\x1d\x1e\x85\u2028\u2029"
 
 LEVEL_STRENGTH = {
     RequirementLevel.UNSPECIFIED: 0,
@@ -120,29 +123,47 @@ def _evidence(sentence: str) -> str:
     return sentence
 
 
-def extract_requirements(text: str, catalog: SkillCatalog) -> list[Requirement]:
-    """Return one requirement per skill mentioned, in the order skills first appear.
+def _sentences(content: str) -> Iterator[tuple[int, str]]:
+    """Split like SENTENCE_END.split, but also yield where each sentence starts."""
+    start = 0
+    for match in SENTENCE_END.finditer(content):
+        yield start, content[start : match.start()]
+        start = match.end()
+    yield start, content[start:]
 
-    If a skill is mentioned more than once, the strongest level wins (required over
-    preferred over unspecified), with the evidence from that mention.
+
+def extract(text: str, catalog: SkillCatalog) -> tuple[list[Requirement], list[Mention]]:
+    """Return the requirements, plus every place in `text` where a skill is mentioned.
+
+    One requirement per skill, in the order skills first appear. If a skill is mentioned
+    more than once, the strongest level wins (required over preferred over unspecified),
+    with the evidence from that mention. Mention offsets index into `text` as given.
     """
     section: RequirementLevel | None = None
     found: dict[str, Requirement] = {}
+    mentions: list[Mention] = []
 
-    for line in text.splitlines():
+    line_start = 0
+    for raw_line in text.splitlines(keepends=True):
+        offset, line_start = line_start, line_start + len(raw_line)
+        line = raw_line.rstrip(LINE_BREAKS)
         if not line.strip():
             continue
 
         heading, content = _split_heading(line, catalog)
+        content_offset = offset + len(line) - len(content)  # content is a suffix of line
         # Keep an inline heading in the evidence: "Nice to have: Docker", not just "Docker".
         prefix = ""
         if heading is not None:
             section = _heading_level(heading)
             prefix = f"{heading.strip()}: "
 
-        for sentence in SENTENCE_END.split(content):
+        for sentence_offset, sentence in _sentences(content):
             level = _sentence_level(sentence) or section or RequirementLevel.UNSPECIFIED
-            for _, skill in catalog.find_in_text(sentence):
+            for start, end, skill in catalog.find_in_text(sentence):
+                base = content_offset + sentence_offset
+                mentions.append(Mention(skill=skill.name, start=base + start, end=base + end))
+
                 existing = found.get(skill.name)
                 if existing and LEVEL_STRENGTH[existing.level] >= LEVEL_STRENGTH[level]:
                     continue
@@ -151,4 +172,8 @@ def extract_requirements(text: str, catalog: SkillCatalog) -> list[Requirement]:
                     skill=skill.name, level=level, evidence=_evidence(prefix + sentence)
                 )
 
-    return list(found.values())
+    return list(found.values()), mentions
+
+
+def extract_requirements(text: str, catalog: SkillCatalog) -> list[Requirement]:
+    return extract(text, catalog)[0]

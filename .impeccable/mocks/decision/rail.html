@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}body{margin:0;width:1440px;height:900px;overflow:hidden;font:15px/1.5 system-ui,'Segoe UI',sans-serif;color:#1f2a44;background:#e8eef6}
+header{height:64px;background:#1d4e89;color:#fff;display:flex;align-items:center;padding:0 32px;gap:16px}header h1{font-size:22px;margin:0}header p{margin:0;opacity:.85}
+.wrap{display:grid;grid-template-columns:320px 1fr;height:836px}
+aside{background:#dfe7f2;border-right:1px solid #b9cde6;padding:24px}
+aside h2{font-size:26px;margin:0 0 4px}.hint{font-size:13px;color:#4a5670;margin:0 0 16px}
+.add{display:flex;gap:8px;margin-bottom:16px}.add i{flex:1;height:38px;background:#fff;border:1px solid #b9cde6;border-radius:6px}.add b{width:70px;height:38px;border:1px solid #1d4e89;border-radius:6px}
+.sk{background:#fffefa;border:1px solid #c9d6e8;border-top:2px solid #d9434c;border-radius:4px;padding:8px 12px;margin-bottom:8px;display:flex;justify-content:space-between;font-size:15px}
+.sk span{color:#4a5670;font-size:13px}.sk.none{background:#fbe3e8}
+main{padding:24px 40px;overflow:hidden}
+.posting{background:#fffefa;border:1px solid #c9d6e8;border-radius:6px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.posting strong{font-size:26px}.btn{background:#1d4e89;color:#fff;padding:12px 22px;border-radius:6px;font-weight:600;font-size:22px}
+.sum{font-size:15px;margin:0 0 18px;color:#4a5670}
+.tab{display:inline-block;padding:6px 16px;border-radius:8px 8px 0 0;font-weight:700;font-size:24px}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:14px;border-radius:0 8px 8px 8px;margin-bottom:22px}
+.card{border-radius:4px;border-top:2px solid #d9434c;padding:10px 14px;height:140px;background:repeating-linear-gradient(#fffefa 0 23px,#b9cde6 23px 24px);background-position:0 40px}
+.card b{font-size:24px;display:block;background:#fffefa}
+.m .tab,.m .row{background:#fbe3e8}.u .tab,.u .row{background:#fff2bf}.g .tab,.g .row{background:#e2f2df}
+</style></head><body>
+<header><h1>Internship Skill Gap Analyzer</h1><p>See what matches, what is missing, and where each requirement comes from.</p></header>
+<div class="wrap">
+<aside><h2>Your skills</h2><p class="hint">Your profile, kept for every posting.</p>
+<div class="add"><i></i><b></b></div>
+<div class="sk">Python <span>Intermediate · 2 matches</span></div>
+<div class="sk">Git <span>Level not set · 1 match</span></div>
+<div class="sk">React <span>Beginner · 1 match</span></div>
+<div class="sk none">SQL <span>Don't have it yet</span></div>
+<div class="sk">Java <span>Beginner · 0 matches</span></div>
+</aside>
+<main>
+<div class="posting"><div><strong>Software Engineering Intern</strong><div class="hint">Posting pasted · 14 lines · Edit posting</div></div><span class="btn">Analyze again</span></div>
+<p class="sum">Required: 3 of 5 matched · Preferred: 0 of 2 matched · Mentioned: 1 of 2 matched</p>
+<div class="m"><span class="tab">Gaps to work on 1</span><div class="row"><div class="card"><b>SQL</b>Familiarity with Git and SQL</div></div></div>
+<div class="u"><span class="tab">Not in your profile 3</span><div class="row"><div class="card"><b>REST APIs</b>Experience building REST APIs</div><div class="card"><b>Docker</b>Docker or AWS experience is a plus</div><div class="card"><b>AWS</b>Docker or AWS experience is a plus</div></div></div>
+<div class="g"><span class="tab">Matched 4</span><div class="row"><div class="card"><b>Python</b>Experience with Python or Java</div><div class="card"><b>Git</b>Familiarity with Git and SQL</div><div class="card"><b>React</b>React/TypeScript frontend</div></div></div>
+</main></div></body></html>
