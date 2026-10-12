@@ -34,7 +34,8 @@ def _explain(requirement: Requirement, profile_skill: ProfileSkill | None) -> st
             "Add it if you have experience with it; otherwise it is a potential gap."
         )
 
-    listed_as = "" if profile_skill.name == name else f" (listed as {profile_skill.name!r})"
+    same_name = profile_skill.name.casefold() == name.casefold()
+    listed_as = "" if same_name else f" (listed as {profile_skill.name!r})"
     if profile_skill.proficiency is Proficiency.NONE:
         return f"Your profile says you don't have experience with {name}{listed_as} yet."
     level = f" at {profile_skill.proficiency.value} level" if profile_skill.proficiency else ""

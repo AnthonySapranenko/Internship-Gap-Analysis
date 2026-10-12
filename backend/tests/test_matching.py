@@ -97,3 +97,9 @@ Nice to have: REST APIs, unit testing
         "REST APIs": (RequirementLevel.PREFERRED, MatchStatus.UNLISTED),
         "Automated testing": (RequirementLevel.PREFERRED, MatchStatus.UNLISTED),
     }
+
+
+def test_capitalization_difference_is_not_called_out():
+    match = match_one("Python", profile(ProfileSkill(name="python")))
+
+    assert match.explanation == "Your profile lists Python."

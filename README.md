@@ -183,7 +183,7 @@ Development will proceed incrementally, prioritizing a reliable end-to-end workf
 - [x] **Phase 1 — Foundation:** Establish repository structure, development environment, documentation, and coding conventions.
 - [x] **Phase 2 — Data models:** Define internship requirements, normalized skills, and student skill profiles.
 - [x] **Phase 3 — Analysis engine:** Implement skill extraction, normalization, matching, and gap identification.
-- [ ] **Phase 4 — Backend API:** Expose analysis functionality through validated FastAPI endpoints.
+- [x] **Phase 4 — Backend API:** Expose analysis functionality through validated FastAPI endpoints.
 - [ ] **Phase 5 — Frontend:** Build the interface for entering internship descriptions and reviewing analysis results.
 - [ ] **Phase 6 — Recommendations:** Generate prioritized learning tasks tied to identified gaps.
 - [ ] **Phase 7 — Automated testing:** Cover matching rules, edge cases, malformed input, and API behavior.
@@ -282,6 +282,25 @@ npm run dev
 ```
 
 Open http://localhost:5173. The page shows whether it can reach the backend. The frontend dev server forwards `/api` requests to the backend on port 8000. Interactive API docs are at http://localhost:8000/docs.
+
+### API
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/health` | Check that the backend is running |
+| `GET /api/skills` | List every skill the analyzer recognizes, with category and aliases |
+| `POST /api/analyze` | Analyze an internship description against a skill profile |
+
+Example request to `/api/analyze`:
+
+```json
+{
+  "internship": { "title": "SWE Intern", "text": "Requirements:\n- Python and SQL\nNice to have: Docker" },
+  "profile": { "skills": [{ "name": "Python", "proficiency": "intermediate" }, { "name": "SQL", "proficiency": "none" }] }
+}
+```
+
+The response lists one entry per requirement found: the skill, whether it is `required`, `preferred` or `unspecified`, the sentence it came from, its status (`matched`, `missing` or `unlisted`) and an explanation. Invalid input returns HTTP 422 with details.
 
 ### Running checks
 

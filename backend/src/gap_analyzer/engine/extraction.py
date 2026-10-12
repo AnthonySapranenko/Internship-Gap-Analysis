@@ -134,8 +134,11 @@ def extract_requirements(text: str, catalog: SkillCatalog) -> list[Requirement]:
             continue
 
         heading, content = _split_heading(line, catalog)
+        # Keep an inline heading in the evidence: "Nice to have: Docker", not just "Docker".
+        prefix = ""
         if heading is not None:
             section = _heading_level(heading)
+            prefix = f"{heading.strip()}: "
 
         for sentence in SENTENCE_END.split(content):
             level = _sentence_level(sentence) or section or RequirementLevel.UNSPECIFIED
@@ -145,7 +148,7 @@ def extract_requirements(text: str, catalog: SkillCatalog) -> list[Requirement]:
                     continue
                 # Replacing a dict entry keeps its position, so first-mention order holds.
                 found[skill.name] = Requirement(
-                    skill=skill.name, level=level, evidence=_evidence(sentence)
+                    skill=skill.name, level=level, evidence=_evidence(prefix + sentence)
                 )
 
     return list(found.values())

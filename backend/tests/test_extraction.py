@@ -65,7 +65,10 @@ def test_unbulleted_line_does_not_end_section():
 
 
 def test_inline_heading_with_content():
-    assert levels("Nice to have: Docker, AWS") == {"Docker": PREFERRED, "AWS": PREFERRED}
+    text = "Nice to have: Docker, AWS"
+
+    assert levels(text) == {"Docker": PREFERRED, "AWS": PREFERRED}
+    assert extract_requirements(text, DEFAULT_CATALOG)[0].evidence == text
 
 
 def test_colon_inside_sentence_is_not_a_heading():
