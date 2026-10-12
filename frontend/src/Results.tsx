@@ -64,10 +64,12 @@ export function Results({ result, selected, onSelect, onAddSkill, justFiled }: P
       <div className="results-head">
         <h2>Results</h2>
         <p className="summary">
-          {summarize(result).map(({ level, total, matched }) => (
+          {summarize(result).map(({ level, total, matched }, index, rows) => (
             <span key={level} className="summary-item">
-              {LEVEL_LABEL[level]}: <strong className="num">{matched}</strong> of{' '}
-              <span className="num">{total}</span> matched
+              {index === 0 && 'Matched: '}
+              <strong className="num">{matched}</strong> of <span className="num">{total}</span>{' '}
+              {LEVEL_LABEL[level].toLowerCase()}
+              {index < rows.length - 1 ? ', ' : ''}
             </span>
           ))}
         </p>

@@ -1,7 +1,7 @@
 import { useEffect, useId, useMemo, useRef } from 'react'
 import type { MatchStatus, Mention } from './api'
 import { STATUS_LABEL } from './labels'
-import { segment } from './marks'
+import { segment, splitTitle } from './marks'
 
 const MAX_DESCRIPTION_LENGTH = 50_000
 
@@ -9,6 +9,8 @@ interface Props {
   description: string
   onChange: (description: string) => void
   onUseExample: () => void
+  /** The sheet holds the unedited sample posting, which must stay labeled as an example. */
+  isExample: boolean
   /** Present when the posting has been analyzed and not edited since. */
   marked: { mentions: Mention[]; statusBySkill: Map<string, MatchStatus> } | null
   editing: boolean
@@ -21,6 +23,7 @@ export function PostingSheet({
   description,
   onChange,
   onUseExample,
+  isExample,
   marked,
   editing,
   onEditingChange,
@@ -31,8 +34,8 @@ export function PostingSheet({
   const sheetRef = useRef<HTMLDivElement>(null)
   const showMarks = marked !== null && !editing
 
-  const segments = useMemo(
-    () => (marked ? segment(description, marked.mentions) : []),
+  const { title, body } = useMemo(
+    () => splitTitle(marked ? segment(description, marked.mentions) : []),
     [description, marked],
   )
 
@@ -48,13 +51,16 @@ export function PostingSheet({
   return (
     <section className="posting" aria-labelledby={`${textareaId}-label`}>
       <div className="posting-head">
-        <h2 id={`${textareaId}-label`}>
-          {showMarks ? (
-            'Internship description'
-          ) : (
-            <label htmlFor={textareaId}>Internship description</label>
-          )}
-        </h2>
+        <div className="posting-title">
+          <h2 id={`${textareaId}-label`}>
+            {showMarks ? (
+              'Internship description'
+            ) : (
+              <label htmlFor={textareaId}>Internship description</label>
+            )}
+          </h2>
+          {isExample && <span className="example-tag">Example posting</span>}
+        </div>
         <div className="posting-actions">
           {showMarks ? (
             <button type="button" className="button-link" onClick={() => onEditingChange(true)}>
@@ -81,7 +87,8 @@ export function PostingSheet({
 
       {showMarks ? (
         <div ref={sheetRef} className="sheet sheet-marked" tabIndex={-1}>
-          {segments.map((part, index) => {
+          {title && <h3 className="sheet-title">{title}</h3>}
+          {body.map((part, index) => {
             if (!part.mention) return <span key={index}>{part.text}</span>
             const skill = part.mention.skill
             const status = marked.statusBySkill.get(skill) ?? 'unlisted'

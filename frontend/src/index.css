@@ -377,9 +377,29 @@ svg {
   font-size: 1.125rem;
 }
 
+.posting-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 10px;
+  row-gap: 4px;
+}
+
+/* The sample posting is synthetic, so it stays labeled while it is unedited. */
+.example-tag {
+  padding: 1px 8px;
+  border: 1px solid var(--ink-unlisted);
+  border-radius: var(--radius);
+  background: var(--stock-unlisted);
+  color: var(--ink-unlisted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
 .posting-actions {
   display: flex;
   gap: 16px;
+  white-space: nowrap;
 }
 
 .sheet {
@@ -412,6 +432,15 @@ svg {
 
 .sheet-input {
   resize: vertical;
+}
+
+/* The posting's first line, set on the ruled grid like a title written on the card. */
+.sheet-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: var(--line);
+  text-wrap: balance;
 }
 
 .sheet-input::placeholder {
@@ -479,12 +508,13 @@ svg {
 }
 
 .summary {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 16px;
   margin: 6px 0 0;
   font-size: 0.875rem;
   color: var(--ink-muted);
+}
+
+.summary-item {
+  white-space: nowrap;
 }
 
 .summary strong {
@@ -589,8 +619,10 @@ svg {
 .card-head {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 12px;
+  column-gap: 12px;
+  row-gap: 2px;
   width: 100%;
   min-height: 44px;
   padding: 8px 14px;
@@ -606,7 +638,7 @@ svg {
 
 .card-skill {
   font-weight: 650;
-  font-size: 1rem;
+  font-size: 1.25rem;
 }
 
 .card-meta {
@@ -660,7 +692,7 @@ svg {
 .card-body {
   --line: 1.5rem;
 
-  padding: 2px 14px var(--line);
+  padding: 2px 14px 10px;
   background-color: var(--stock);
   background-image: linear-gradient(
     to bottom,
@@ -695,8 +727,9 @@ svg {
   font-size: 0.9375rem;
 }
 
+/* 36px tall plus 6px above and below spans exactly two ruled lines. */
 .card-body .button-secondary {
-  margin-top: 6px;
+  margin: 6px 0;
 }
 
 /* Signature move: a card re-filed from "Not in your skills" into "Matched". */
@@ -793,6 +826,12 @@ svg {
     min-height: 260px;
     padding-left: 18px;
     padding-right: 18px;
+  }
+
+  /* Results mode: show the whole posting so every mark is reachable without a nested scroll. */
+  .sheet-marked {
+    max-height: none;
+    overflow: visible;
   }
 
   .chip-add {

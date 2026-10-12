@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "border-accent-on-rounded",
+        "value": "*",
+        "files": [
+          "frontend/src/index.css"
+        ],
+        "createdAt": "2026-10-12T15:05:52.745Z",
+        "reason": "Agent: the red top rule is the index-card header rule from the direction contract; .chip (2px), .sheet (3px) and .card (2px) all square their top corners (border-radius: 0 0 r r), so the rounded-corner clash does not render; user asked for a narrow ignore. Re-check this if a rounded-top element gains a top accent here."
+      },
+      {
+        "rule": "border-accent-on-rounded",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/*.html"
+        ],
+        "createdAt": "2026-10-12T15:05:52.992Z",
+        "reason": "User confirmed: throwaway layout sketches from the direction round, not shipped UI"
+      }
+    ]
+  }
+}

@@ -25,3 +25,20 @@ export function segment(text: string, mentions: Mention[]): Segment[] {
   if (cursor < chars.length) segments.push({ text: chars.slice(cursor).join('') })
   return segments
 }
+
+const MAX_TITLE_LENGTH = 100
+
+/**
+ * Split off the posting's first line as its title, so the marked sheet reads as a document.
+ * Only a short first line without marks counts; anything else stays in the body.
+ */
+export function splitTitle(segments: Segment[]): { title: string | null; body: Segment[] } {
+  const first = segments[0]
+  const newline = first && !first.mention ? first.text.indexOf('\n') : -1
+  const title = newline > 0 ? first.text.slice(0, newline) : ''
+  if (title.trim() === '' || title.length > MAX_TITLE_LENGTH) {
+    return { title: null, body: segments }
+  }
+  const rest = first.text.slice(newline + 1)
+  return { title, body: rest ? [{ text: rest }, ...segments.slice(1)] : segments.slice(1) }
+}

@@ -114,6 +114,7 @@ function App() {
               setDescription(SAMPLE_POSTING)
               setEditing(true)
             }}
+            isExample={description === SAMPLE_POSTING}
             marked={marked}
             editing={editing}
             onEditingChange={setEditing}
