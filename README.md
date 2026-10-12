@@ -182,7 +182,7 @@ Development will proceed incrementally, prioritizing a reliable end-to-end workf
 
 - [x] **Phase 1 — Foundation:** Establish repository structure, development environment, documentation, and coding conventions.
 - [x] **Phase 2 — Data models:** Define internship requirements, normalized skills, and student skill profiles.
-- [ ] **Phase 3 — Analysis engine:** Implement skill extraction, normalization, matching, and gap identification.
+- [x] **Phase 3 — Analysis engine:** Implement skill extraction, normalization, matching, and gap identification.
 - [ ] **Phase 4 — Backend API:** Expose analysis functionality through validated FastAPI endpoints.
 - [ ] **Phase 5 — Frontend:** Build the interface for entering internship descriptions and reviewing analysis results.
 - [ ] **Phase 6 — Recommendations:** Generate prioritized learning tasks tied to identified gaps.
@@ -207,6 +207,16 @@ Planned quality checks include:
 Where possible, analysis quality will be measured using appropriate metrics such as precision and recall on manually labeled skill-extraction or matching examples.
 
 The goal is to make the system's behavior understandable, repeatable, and measurable.
+
+### Known limitations
+
+The analysis engine uses explainable rules rather than machine learning. Current limitations:
+
+- Only skills in the catalog (`backend/src/gap_analyzer/engine/catalog.py`) are recognized. A missed skill usually means the catalog needs a new entry or alias.
+- "Either/or" requirements ("one of Java, C++, or Python") are treated as if every listed skill were required.
+- Related skills are not inferred. PostgreSQL experience does not count toward a SQL requirement unless SQL is also listed.
+- Required and preferred levels come from section headings and phrases such as "is a plus". Postings that use unusual headings may be marked "unspecified".
+- "Go" and "C" are only recognized when another skill is mentioned in the same sentence, to avoid matching ordinary words such as "Go big" or "Grade C".
 
 ## Privacy and Responsible Use
 
